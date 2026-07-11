@@ -44,7 +44,6 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {
-        "status": "healthy",
-        "version": settings.VERSION,
-        "project": settings.PROJECT_NAME
+        "status": "ok",
+        "version": settings.VERSION
     }
