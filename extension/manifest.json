@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Project-X Extension",
+  "version": "0.1.0",
+  "description": "Project-X Browser Extension Foundation",
+  "permissions": ["storage", "activeTab"],
+  "action": {
+    "default_popup": "popup/index.html"
+  },
+  "background": {
+    "service_worker": "background/main.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/main.js"]
+    }
+  ],
+  "icons": {
+    "16": "assets/icon-16.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  }
+}

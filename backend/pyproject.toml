@@ -1,0 +1,20 @@
+[project]
+name = "project-x-backend"
+version = "0.1.0"
+description = "Project-X FastAPI Backend Foundation"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "sqlmodel>=0.0.16",
+    "pydantic-settings>=2.2.1",
+    "python-dotenv>=1.0.1",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]

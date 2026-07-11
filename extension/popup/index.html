@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project-X Extension</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Project-X</h1>
+      <span class="version">v0.1.0</span>
+    </header>
+    
+    <main>
+      <div class="status-section">
+        <div class="status-indicator" id="statusIndicator"></div>
+        <span id="statusText">Checking status...</span>
+      </div>
+      
+      <div class="info-section">
+        <h2>Page Information</h2>
+        <div class="info-item">
+          <label>URL:</label>
+          <span id="pageUrl">-</span>
+        </div>
+        <div class="info-item">
+          <label>Title:</label>
+          <span id="pageTitle">-</span>
+        </div>
+      </div>
+      
+      <div class="actions-section">
+        <button id="refreshBtn" class="btn btn-primary">Refresh</button>
+        <button id="settingsBtn" class="btn btn-secondary">Settings</button>
+      </div>
+    </main>
+    
+    <footer>
+      <p>Project-X Extension Foundation</p>
+    </footer>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
