@@ -38,15 +38,12 @@ async function initializePopup() {
   try {
     const result = await chrome.storage.local.get(['settings', 'apiUrl']);
     const settings = result.settings || { enabled: true, notifications: true };
-    const apiUrl = result.apiUrl || 'http://localhost:8000/api/v1';
+    const apiUrl = result.apiUrl || 'http://127.0.0.1:8000/api/v1';
     
-    updateStatus(settings.enabled);
-    
-    // Check backend connection
     await checkBackendConnection(apiUrl);
   } catch (error) {
     console.error('Error initializing popup:', error);
-    updateStatus(false);
+    updateBackendStatus(false);
   }
 }
 
@@ -64,10 +61,26 @@ function updateStatus(isEnabled) {
   }
 }
 
+// Update backend status
+function updateBackendStatus(isConnected) {
+  const statusIndicator = document.getElementById('statusIndicator');
+  const statusText = document.getElementById('statusText');
+  
+  if (isConnected) {
+    statusIndicator.classList.add('active');
+    statusIndicator.classList.remove('inactive');
+    statusText.textContent = '🟢 Backend Connected';
+  } else {
+    statusIndicator.classList.add('inactive');
+    statusIndicator.classList.remove('active');
+    statusText.textContent = '🔴 Backend Offline';
+  }
+}
+
 // Check backend connection
 async function checkBackendConnection(apiUrl) {
   try {
-    const response = await fetch(`${apiUrl}/health`, {
+    const response = await fetch('http://127.0.0.1:8000/health', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -75,13 +88,12 @@ async function checkBackendConnection(apiUrl) {
     });
     
     if (response.ok) {
-      console.log('Backend connection successful');
+      updateBackendStatus(true);
     } else {
-      console.warn('Backend returned non-ok status:', response.status);
+      updateBackendStatus(false);
     }
   } catch (error) {
-    console.warn('Backend connection failed:', error);
-    // Backend might not be running, which is fine for foundation
+    updateBackendStatus(false);
   }
 }
 
@@ -96,12 +108,16 @@ async function handleRefresh() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     
     if (tab && tab.id) {
-      chrome.tabs.sendMessage(tab.id, { action: 'getPageInfo' }, (response) => {
-        if (response && response.success) {
-          document.getElementById('pageUrl').textContent = response.data.url;
-          document.getElementById('pageTitle').textContent = response.data.title;
-        }
-      });
+      try {
+        chrome.tabs.sendMessage(tab.id, { action: 'getPageInfo' }, (response) => {
+          if (response && response.success) {
+            document.getElementById('pageUrl').textContent = response.data.url;
+            document.getElementById('pageTitle').textContent = response.data.title;
+          }
+        });
+      } catch (error) {
+        console.warn('Could not send message to content script:', error);
+      }
     }
   } catch (error) {
     console.error('Error refreshing:', error);
@@ -113,13 +129,8 @@ async function handleRefresh() {
 
 // Handle settings button click
 function handleSettings() {
-  // Open options page or show settings modal
-  if (chrome.runtime.openOptionsPage) {
-    chrome.runtime.openOptionsPage();
-  } else {
-    // Fallback: open a new tab with settings
-    chrome.tabs.create({ url: 'options.html' });
-  }
+  // Options page not implemented in M2.2 foundation
+  console.log('Settings button clicked - options page not yet implemented');
 }
 
 // Example: Send message to background
