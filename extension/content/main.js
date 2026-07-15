@@ -4,6 +4,11 @@
 console.log("[Project-X] Content script injected");
 console.log('Project-X Extension content script loaded');
 
+// Detect ChatGPT
+if (window.location.hostname === 'chatgpt.com' || window.location.hostname === 'chat.openai.com') {
+  console.log('[Project-X] ChatGPT detected');
+}
+
 // Listen for messages from background or popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Content script received message:', request);
