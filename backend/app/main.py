@@ -28,9 +28,9 @@ app.add_middleware(
 async def startup_event():
     """Initialize database on startup."""
     create_db_and_tables()
-    print(f"✓ {settings.PROJECT_NAME} v{settings.VERSION} started successfully")
-    print(f"✓ Database initialized")
-    print(f"✓ API documentation available at /docs")
+    print(f"[OK] {settings.PROJECT_NAME} v{settings.VERSION} started successfully")
+    print("[OK] Database initialized")
+    print("[OK] API documentation available at /docs")
 
 @app.get("/")
 async def root():

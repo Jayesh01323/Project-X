@@ -104,23 +104,28 @@ async function handleRefresh() {
   refreshBtn.textContent = 'Refreshing...';
   
   try {
-    // Request page info from content script
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    console.log("[Project-X] Sending ping to tab:", tab.id, "URL:", tab.url);
     
     if (tab && tab.id) {
-      try {
-        chrome.tabs.sendMessage(tab.id, { action: 'getPageInfo' }, (response) => {
-          if (response && response.success) {
-            document.getElementById('pageUrl').textContent = response.data.url;
-            document.getElementById('pageTitle').textContent = response.data.title;
-          }
-        });
-      } catch (error) {
-        console.warn('Could not send message to content script:', error);
-      }
+      chrome.tabs.sendMessage(tab.id, { action: "ping" }, (response) => {
+        console.log("[Project-X] Response received:", response);
+        console.log("[Project-X] chrome.runtime.lastError:", chrome.runtime.lastError);
+        
+        if (chrome.runtime.lastError) {
+            console.warn("Content script unavailable:", chrome.runtime.lastError.message);
+            return;
+        }
+
+        if (response?.success && response.message === "pong") {
+            console.log("Received: pong");
+        } else {
+            console.warn("Unexpected response:", response);
+        }
+      });
     }
   } catch (error) {
-    console.error('Error refreshing:', error);
+    console.warn('Content script unavailable');
   } finally {
     refreshBtn.disabled = false;
     refreshBtn.textContent = 'Refresh';
@@ -129,8 +134,18 @@ async function handleRefresh() {
 
 // Handle settings button click
 function handleSettings() {
-  // Options page not implemented in M2.2 foundation
-  console.log('Settings button clicked - options page not yet implemented');
+  chrome.runtime.sendMessage({ action: "backgroundPing" }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.warn("Background unavailable:", chrome.runtime.lastError.message);
+      return;
+    }
+
+    if (response?.success && response.message === "background-pong") {
+      console.log("Received: background-pong");
+    } else {
+      console.warn("Unexpected response:", response);
+    }
+  });
 }
 
 // Example: Send message to background

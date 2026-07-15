@@ -1,11 +1,17 @@
 // Project-X Extension Content Script
 // Injected into web pages to interact with DOM and page content
 
+console.log("[Project-X] Content script injected");
 console.log('Project-X Extension content script loaded');
 
 // Listen for messages from background or popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Content script received message:', request);
+  
+  if (request.action === 'ping') {
+    sendResponse({ success: true, message: 'pong' });
+    return true;
+  }
   
   if (request.action === 'getPageInfo') {
     // Extract page information

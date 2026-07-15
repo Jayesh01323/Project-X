@@ -23,6 +23,12 @@ chrome.runtime.onInstalled.addListener((details) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Message received:', request);
   
+  if (request.action === 'backgroundPing') {
+    console.log('Sending background-pong response');
+    sendResponse({ success: true, message: 'background-pong' });
+    return;
+  }
+  
   if (request.action === 'fetchData') {
     // Handle API requests from extension
     handleApiRequest(request)
