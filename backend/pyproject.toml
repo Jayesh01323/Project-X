@@ -9,6 +9,7 @@ dependencies = [
     "sqlmodel>=0.0.16",
     "pydantic-settings>=2.2.1",
     "python-dotenv>=1.0.1",
+    "google-genai>=1.65.0",
 ]
 
 [build-system]
